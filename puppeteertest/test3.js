@@ -6,6 +6,11 @@ const puppeteer = require('puppeteer');
 const {autoScroll} = require('./util/functions');
 const DEVCONFIG = require('./config/dev.config');
 
+const selector = {
+  newsOpenBtn: '[data-data-id="xxxal"] .grid-gr:nth-child(1) .grid-cell section section div.extra > span', // 打开新闻列表的按钮
+  videoOpenBtn: '',
+};
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: false, // 是否以 无头模式 运行浏览器。默认是 true
@@ -47,11 +52,10 @@ const DEVCONFIG = require('./config/dev.config');
   // 登录后等待30秒等页面加载，并手动完成验证码验证
   await page.waitFor(30 * 1000);
   const jobList = await page.$$('.position_link');
-  const cids = await page.$$eval('.position_link', els => Array.from(els).map(el => el.href));
   console.log('jobList.length: ', jobList.length);
-  let index = 0;
-  while (index < cids.length) {
-    const selector = `.position_link[href="${cids[index]}"]`;
+  let index = 1;
+  while (index < jobList.length) {
+    const selector = `li.con_list_item:nth-child(${index}) .position_link`;
     const item = page.$(selector);
     if (item) {
       console.log('click jobList: ', index);
