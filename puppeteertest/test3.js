@@ -44,15 +44,20 @@ const {autoScroll} = require('./util/functions');
     const item = page.$(selector);
     if (item) {
       console.log('click jobList: ', index);
+      // 点击指定元素打开新页面tab
       await page.click(selector, 3 * 1000);
       await page.waitFor(2 * 1000);
+      // 加载新页面后获取当前浏览器打开的所有页面对象
       const pages = await browser.pages();
       console.log(pages.length);
       const newPage = pages[2];
       await newPage.waitFor(2 * 1000);
+      // 新页面tab操作
       await autoScroll(newPage);
       console.log(await newPage.title());
+      // 关闭新页面tab
       await newPage.close();
+      // 回到之前的tab
       await page.bringToFront();
 
     } else {
