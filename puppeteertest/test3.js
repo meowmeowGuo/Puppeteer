@@ -1,8 +1,10 @@
 /*
 * test3：自动操作浏览器
+* new：新增登录操作
 * */
 const puppeteer = require('puppeteer');
 const {autoScroll} = require('./util/functions');
+const DEVCONFIG = require('./config/dev.config');
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -11,15 +13,14 @@ const {autoScroll} = require('./util/functions');
     args: ['--auto-open-devtools-for-tabs'],
   });
 
+  /*
   //在点击按钮之前，事先定义一个promise，用于返回新tab的page对象
-  const newPagePromise = new Promise(res =>
-    browser.once('targetcreated',
-      target => res(target.page()),
-    ),
-  );
-
-  /* const target = await browser.target();
-   await target.screenshot({path: 'example.png'});*/
+   const newPagePromise = new Promise(res =>
+     browser.once('targetcreated',
+       target => res(target.page()),
+     ),
+   );
+   */
   const page = await browser.newPage();
   await page.goto('https://www.lagou.com/gongsi/j124262.html', {
     waitUntil: 'load',
@@ -34,7 +35,17 @@ const {autoScroll} = require('./util/functions');
   await page.waitForSelector('#main_container');
   let title = await page.title();
   console.log(title);
-  await autoScroll(page);
+  await page.click('.login');
+  // 登录系统
+  await page.waitFor(2 * 1000);
+  // await autoScroll(page);
+  // 输入用户名密码
+  await page.type('.login_enter_password', DEVCONFIG.lagou.username, {delay: 200}); // 设置延时使输入更像人工操作
+  await page.type('.login_enter_password[type="password"]', DEVCONFIG.lagou.password, {delay: 200});
+  // 点击登录按钮
+  await page.click('div.login-btn.login-password.sense_login_password.btn-green');
+  // 登录后等待30秒等页面加载，并手动完成验证码验证
+  await page.waitFor(30 * 1000);
   const jobList = await page.$$('.position_link');
   const cids = await page.$$eval('.position_link', els => Array.from(els).map(el => el.href));
   console.log('jobList.length: ', jobList.length);
