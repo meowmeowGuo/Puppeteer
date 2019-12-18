@@ -12,3 +12,4 @@ yarn-error.log
 
 # visual studio code
 puppeteertest/cacheData
+config/dev.config.js
