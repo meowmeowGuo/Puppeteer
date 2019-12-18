@@ -77,6 +77,6 @@ const DEVCONFIG = require('./config/dev.config');
     index += 1;
   }
 
-  // lagouScript();
+  await browser.close();
 
 })();
