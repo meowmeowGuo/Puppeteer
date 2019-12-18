@@ -8,19 +8,9 @@ const {autoScroll} = require('./util/functions');
 
 const WRITE_FILE_DIR = path.join(__dirname, './cacheData'); // 请求数据存储的文件目录
 
-String.prototype.replaceEnter = function () {
-  this.replace(/|\t|\r|\n/g, '');
-};
-String.prototype.replaceSpace = function () {
-  this.replace(/ /g, '');
-};
 (async () => {
   const TOTAL_PAGE = 4;
-  const browser = await puppeteer.launch({
-    headless: false, // 是否以 无头模式 运行浏览器。默认是 true
-    devtools: true, // 是否为每个选项卡自动打开DevTools面板
-    args: ['--auto-open-devtools-for-tabs'],
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://www.lagou.com/gongsi/j124262.html', {
     waitUntil: 'load',
@@ -45,6 +35,7 @@ String.prototype.replaceSpace = function () {
     await autoScroll(page);
   }
   await saveResDataToJsonFile(writeList);
+  await browser.close();
 })();
 
 // 处理爬虫需求
