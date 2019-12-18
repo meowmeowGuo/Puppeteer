@@ -1,0 +1,14 @@
+.*.swp
+node_modules
+public/dist
+
+.idea
+yarn.lock
+package-lock.json
+.DS_Store
+/.vscode
+npm-debug.log*
+yarn-error.log
+
+# visual studio code
+puppeteertest/cacheData
