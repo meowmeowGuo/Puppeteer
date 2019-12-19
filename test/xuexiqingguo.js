@@ -16,9 +16,10 @@ const selector = {
 };
 
 const waitTime = 5 * 1000;
+const randomMin = parseFloat(Math.random().toFixed(2));
 const newsTaskConfig = {
   task: '看新闻',
-  time: 2.5 * 60 * 1000, // 2 min 以上
+  time: (2 + randomMin) * 60 * 1000, // 2 min 以上
   openBtn: '[data-data-id="xxxal"] .grid-gr:nth-child(1) .grid-cell section section div.extra > span', // 打开新闻列表的按钮选择器
   newSelector: (index) => `[data-data-id="shiping-text-list-grid"] .grid-cell:nth-child(${index}) .text-link-item-title`,
   needCount: 6,
@@ -123,7 +124,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
             // await page.click(selector.videoSelector(row, col));
             // await page.waitFor(waitTime);
             console.log(`开始第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务`);
-            await doTask(currentPages[3], selector.videoSelector(row, col), 4, 3.5 * 60 * 1000);
+            await doTask(currentPages[3], selector.videoSelector(row, col), 4, (3 + randomMin) * 60 * 1000);
             console.log(`第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务结束`);
             col++;
           }
