@@ -6,11 +6,6 @@ const puppeteer = require('puppeteer');
 const {autoScroll} = require('./util/functions');
 const DEVCONFIG = require('./config/dev.config');
 
-const selector = {
-  newsOpenBtn: '[data-data-id="xxxal"] .grid-gr:nth-child(1) .grid-cell section section div.extra > span', // 打开新闻列表的按钮
-  videoOpenBtn: '',
-};
-
 (async () => {
   const browser = await puppeteer.launch({
     headless: false, // 是否以 无头模式 运行浏览器。默认是 true
