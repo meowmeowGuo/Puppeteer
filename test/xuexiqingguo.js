@@ -5,6 +5,7 @@
 const puppeteer = require('puppeteer');
 const clc = require('cli-color');
 const {autoScroll} = require('../util/functions');
+const logger = console.log;
 
 const COLITEMCOUNT = 2;
 const selector = {
@@ -43,8 +44,8 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
   });
   // 设置视图大小
   await page.setViewport({
-    width: 200,
-    height: 100,
+    width: 1280,
+    height: 800,
   });
   let currentPages = await browser.pages();
   // 等待指定时间 second
@@ -67,13 +68,13 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
   }
 
   async function newsTask() {
-    console.info(`开始 ${newsTaskConfig.task} 任务`);
+    logger(clc.yellow(`====开始 ${newsTaskConfig.task} 任务====`));
     for (let i = 0; i < newsTaskConfig.needCount; i++) {
-      console.log(`开始第${i + 1}条新闻`);
+      logger(`--------第 ${clc.green(i + 1)} 条新闻 start--------`);
       await doTask(page, newsTaskConfig.newSelector(i + 1), 2, newsTaskConfig.time);
-      console.log(`结束第${i + 1}条新闻`);
+      logger(`++++++++第 ${clc.green(i + 1)} 条新闻 end++++++++++`);
     }
-    console.warn(`结束 ${newsTaskConfig.task} 任务`);
+    logger(clc.yellow(`====结束 ${newsTaskConfig.task} 任务====`));
   }
 
   async function videoTask() {
@@ -90,55 +91,55 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
     currentPages = await browser.pages();
     // 第一频道共五个专题 第四个专题略过
     for (let i = 1; i <= 5; i++) {
-      console.log('视频任务开始');
+      logger(clc.yellow('====视频任务开始===='));
       if (videoCount < 6 && i !== 4) {
-        console.log(`第 ${i} 个栏目开始`);
+        logger(clc.pink(`第 ${i} 个栏目开始`));
         const currentPage = currentPages[3];
         await currentPage.click(selector.menuSelector(i));
         await currentPage.waitFor(waitTime);
         // 切换成列表模式方便拿到视频日期，筛选前一天的视频，只看日期为前一天的视频
         await currentPage.click(selector.list);
         await currentPage.waitFor(waitTime);
-        console.log('切换到列表模式');
+        logger(clc.blue('切换到列表模式'));
         // 是看发布时间是前一天的新闻保证每天看的都不一样
         const dateList = (await currentPage.$$eval(selector.videoDate, els => Array.from(els).map(el => {
-          console.log(el.innerText);
+          logger(el.innerText);
           return el.innerText;
         })));
         const canViewNumber = dateList.filter(date => date === yesterday).length;
-        console.log(`该栏目有 ${canViewNumber} 个可看视频`);
+        logger(clc.blue(`该栏目有 ${canViewNumber} 个可看视频`));
         const rowCount = Math.ceil(canViewNumber / 2);
         for (let row = 1; row <= rowCount; row++) {
           let col = 1;
           while (col <= COLITEMCOUNT && col + (row - 1) * COLITEMCOUNT <= canViewNumber) {
-            console.log(`开始第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务`);
+            logger(`第 ${clc.green(col + (row - 1) * COLITEMCOUNT)} 个视频任务 start`);
             await doTask(currentPages[3], selector.videoSelector(row, col), 4, (3 + randomMin) * 60 * 1000);
-            console.log(`第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务结束`);
+            logger(`第 ${clc.green(col + (row - 1) * COLITEMCOUNT)} 个视频任务 end`);
             videoCount++;
-            console.log(`已观看${videoCount}个视频`);
+            logger(`已观看 ${clc.red(videoCount)} 个视频`);
             col++;
           }
         }
-        console.log(`第 ${i} 个栏目结束`);
+        logger(clc.pink(`第 ${i} 个栏目结束`));
       }
     }
     if (videoCount >= 6) {
-      console.log('视频任务已完成');
+      logger(clc.yellow('====视频任务已完成===='));
     } else {
-      console.log(`还需 ${6 - videoCount} 个视频才可以完成任务`);
+      logger(clc.red(`还需 ${6 - videoCount} 个视频才可以完成任务`));
     }
   }
 
   if (title === '学习强国') {
-    console.info('登陆成功');
-    console.info('任务开始');
+    logger('登陆成功');
+    logger('任务开始');
     await newsTask();
     await videoTask();
-    console.warn('今日任务完成');
+    logger('今日任务完成');
   } else {
-    console.error('登录失败！');
+    logger(clc.red('登录失败！'));
   }
   await browser.close();
-  console.log('浏览器已经关闭');
+  logger('浏览器已经关闭');
 })();
 
