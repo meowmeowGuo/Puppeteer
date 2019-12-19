@@ -23,26 +23,10 @@ const newsTaskConfig = {
   newSelector: (index) => `[data-data-id="shiping-text-list-grid"] .grid-cell:nth-child(${index}) .text-link-item-title`,
   needCount: 6,
 };
-const tasks = [
-  {
-    task: '看新闻',
-    time: 2.5 * 60 * 1000, // 2 min 以上
-    openBtn: '[data-data-id="xxxal"] .grid-gr:nth-child(1) .grid-cell section section div.extra > span', // 打开新闻列表的按钮选择器
-    newSelector: (index) => `[data-data-id="shiping-text-list-grid"] .grid-cell:nth-child(${index}) .text-link-item-title`,
-    needCount: 6,
-  },
-  /*{
-    task: '看视频',
-    time: 3.5 * 60 * 1000, // 2 min 以上
-    openBtn: '[data-data-id="xxxal"] .grid-gr:nth-child(1) .grid-cell section section div.extra > span', // 打开视频列表的按钮选择器
-    newSelector: (index) => `[data-data-id="shiping-text-list-grid"] .grid-cell:nth-child(${index}) .text-link-item-title`,
-    needCount: 6,
-  },*/
-];
 
 const today = new Date();
 const todayFormat = `${today.getFullYear()}-${today.getMonth() + 1} - ${today.getDate()}`;
-const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 2}`;
+const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 1}`;
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -157,12 +141,12 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
     console.info('登陆成功');
     console.info('任务开始');
     await newsTask();
-    // await videoTask();
+    await videoTask();
     console.warn('今日任务完成');
   } else {
     console.error('登录失败！');
   }
-  // await browser.close();
-
+  await browser.close();
+  console.log('浏览器已经关闭');
 })();
 
