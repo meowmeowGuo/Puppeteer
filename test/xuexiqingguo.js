@@ -118,13 +118,14 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
         const rowCount = Math.ceil(canViewNumber / 2);
         for (let row = 1; row <= rowCount; row++) {
           let col = 1;
-          while (col + (row - 1) * COLITEMCOUNT <= canViewNumber) {
+          while (col <= COLITEMCOUNT && col + (row - 1) * COLITEMCOUNT <= canViewNumber) {
             // 打开视频详情页面 此时pages=['','首页','视频页','第一频道','视频详情']
             // await page.click(selector.videoSelector(row, col));
             // await page.waitFor(waitTime);
             console.log(`开始第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务`);
             await doTask(currentPages[3], selector.videoSelector(row, col), 4, 3.5 * 60 * 1000);
             console.log(`第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务结束`);
+            col++;
           }
         }
         console.log(`第 ${i} 个栏目结束`);
