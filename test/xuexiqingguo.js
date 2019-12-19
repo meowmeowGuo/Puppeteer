@@ -78,16 +78,16 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
   async function videoTask() {
     // 视频任务 start
     let videoCount = 0;
-    // 打开视频页面 此时pages=['','首页','视频页']
+    // 打开视频页面 打开后pages=['','首页','视频页']
     await page.click(selector.videoOpenBtn);
     await page.waitFor(waitTime);
     currentPages = await browser.pages();
-    // 打开视频第一频道页面 此时pages=['','首页','视频页','第一频道']
+    // 打开视频第一频道页面 打开后 pages=['','首页','视频页','第一频道']
     // 打开视频的操作都在最后一个打开的页面进行
     await currentPages[2].click(selector.diyipindao);
     await page.waitFor(waitTime);
     currentPages = await browser.pages();
-    // 第一频道的五个专题 第四个专题略过
+    // 第一频道共五个专题 第四个专题略过
     for (let i = 1; i <= 5; i++) {
       console.log('视频任务开始');
       if (videoCount < 6 && i !== 4) {
@@ -95,7 +95,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
         const currentPage = currentPages[3];
         await currentPage.click(selector.menuSelector(i));
         await currentPage.waitFor(waitTime);
-        // 切换成列表模式方便拿到视频日期
+        // 切换成列表模式方便拿到视频日期，筛选前一天的视频，只看日期为前一天的视频
         await currentPage.click(selector.list);
         await currentPage.waitFor(waitTime);
         console.log('切换到列表模式');
@@ -110,9 +110,6 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
         for (let row = 1; row <= rowCount; row++) {
           let col = 1;
           while (col <= COLITEMCOUNT && col + (row - 1) * COLITEMCOUNT <= canViewNumber) {
-            // 打开视频详情页面 此时pages=['','首页','视频页','第一频道','视频详情']
-            // await page.click(selector.videoSelector(row, col));
-            // await page.waitFor(waitTime);
             console.log(`开始第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务`);
             await doTask(currentPages[3], selector.videoSelector(row, col), 4, (3 + randomMin) * 60 * 1000);
             console.log(`第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务结束`);

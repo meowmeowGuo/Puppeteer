@@ -1,4 +1,3 @@
-const timeout = Math.random() * 1000;
 
 async function autoScroll(page) {
   await page.evaluate(async () => {
@@ -14,7 +13,7 @@ async function autoScroll(page) {
           clearInterval(timer);
           resolve();
         }
-      }, timeout);
+      }, Math.random() * 1000);
     });
   });
 }
