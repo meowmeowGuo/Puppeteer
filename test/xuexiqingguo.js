@@ -15,7 +15,7 @@ const selector = {
   videoSelector: (row, col) => `.tab-panel-container .tab-panel-container section > div:nth-child(3) > section .grid-gr:nth-child(${row}) .grid-cell:nth-child(${col}) .text-wrap`,
 };
 
-const waitTime = 5 * 1000;
+const waitTime = (Math.max(5, Math.random() * 10)) * 1000;
 const randomMin = parseFloat(Math.random().toFixed(2));
 const newsTaskConfig = {
   task: '看新闻',
@@ -70,16 +70,6 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
     for (let i = 0; i < newsTaskConfig.needCount; i++) {
       console.log(`开始第${i + 1}条新闻`);
       await doTask(page, newsTaskConfig.newSelector(i + 1), 2, newsTaskConfig.time);
-      /*
-      await page.click(newsTaskConfig.newSelector(i + 1));
-      await page.waitFor(5 * 1000);
-      const pages = await browser.pages();
-      const newPage = pages[2];
-      await autoScroll(newPage);
-      await newPage.waitFor(newsTaskConfig.time);
-      await newPage.close();
-      await page.bringToFront();
-      */
       console.log(`结束第${i + 1}条新闻`);
     }
     console.warn(`结束 ${newsTaskConfig.task} 任务`);
@@ -87,7 +77,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
 
   async function videoTask() {
     // 视频任务 start
-    const videoCount = 0;
+    let videoCount = 0;
     // 打开视频页面 此时pages=['','首页','视频页']
     await page.click(selector.videoOpenBtn);
     await page.waitFor(waitTime);
@@ -126,6 +116,8 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
             console.log(`开始第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务`);
             await doTask(currentPages[3], selector.videoSelector(row, col), 4, (3 + randomMin) * 60 * 1000);
             console.log(`第 ${col + (row - 1) * COLITEMCOUNT} 个视频任务结束`);
+            videoCount++;
+            console.log(`已观看${videoCount}个视频`);
             col++;
           }
         }
