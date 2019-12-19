@@ -93,7 +93,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
     for (let i = 1; i <= 5; i++) {
       logger(clc.yellow('====视频任务开始===='));
       if (videoCount < 6 && i !== 4) {
-        logger(clc.pink(`第 ${i} 个栏目开始`));
+        logger(clc.magentaBright(`第 ${i} 个栏目开始`));
         const currentPage = currentPages[3];
         await currentPage.click(selector.menuSelector(i));
         await currentPage.waitFor(waitTime);
@@ -120,7 +120,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
             col++;
           }
         }
-        logger(clc.pink(`第 ${i} 个栏目结束`));
+        logger(clc.magentaBright(`第 ${i} 个栏目结束`));
       }
     }
     if (videoCount >= 6) {
