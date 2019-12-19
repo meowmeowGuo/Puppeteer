@@ -4,7 +4,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const {autoScroll} = require('./util/functions');
+const {autoScroll} = require('../util/functions');
 
 const WRITE_FILE_DIR = path.join(__dirname, './cacheData'); // 请求数据存储的文件目录
 

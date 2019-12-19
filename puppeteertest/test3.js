@@ -3,7 +3,7 @@
 * new：新增登录操作
 * */
 const puppeteer = require('puppeteer');
-const {autoScroll} = require('./util/functions');
+const {autoScroll} = require('../util/functions');
 const DEVCONFIG = require('./config/dev.config');
 
 (async () => {

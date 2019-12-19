@@ -3,7 +3,8 @@
 * new：新增登录操作
 * */
 const puppeteer = require('puppeteer');
-const {autoScroll} = require('../puppeteertest/util/functions');
+const clc = require('cli-color');
+const {autoScroll} = require('../util/functions');
 
 const COLITEMCOUNT = 2;
 const selector = {
@@ -42,8 +43,8 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
   });
   // 设置视图大小
   await page.setViewport({
-    width: 1440,
-    height: 790,
+    width: 200,
+    height: 100,
   });
   let currentPages = await browser.pages();
   // 等待指定时间 second
@@ -52,7 +53,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
   await page.waitFor(30 * 1000);
   let title = await page.title();
   // 登录页面title='用户登录'，登录成功后title='学习强国'
-  console.info(title);
+  console.info(clc.blue(title));
 
   async function doTask(page, selector, pageIndex, stayTime) {
     await page.click(selector);

@@ -3,7 +3,7 @@
 * */
 const puppeteer = require('puppeteer');
 const path = require('path');
-const {autoScroll} = require('./util/functions');
+const {autoScroll} = require('../util/functions');
 
 (async () => {
   const browser = await puppeteer.launch({
