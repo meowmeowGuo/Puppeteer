@@ -136,5 +136,43 @@ const pages = await browser.pages(); // 当前所有 page 对象集合
 * */
 const newPage = pages[2]; // 最后一个tab页即为新打开的tab页。
 ```
+新开一个tab页后，需要在新页面进行点击操作时使用newPage对象
 
 ---
+
+#### 2.2.5 获取DOM节点及相关信息
+WebAPI中可通过 `documet.querySelector`,`documet.querySelectorAll`获取到dom节点，在通过
+`DOM.getAttribute()`获取节点的指定属性值，Puppeteer中的两个类似的API为 `page.$eval()`,
+`page.$$eval()`，
+
+1. `page.$$eval(selector, pageFunction[, ...args])`
+ *  selector < string > 一个框架选择器
+ *  pageFunction < function > 在浏览器实例上下文中要执行的方法
+ *  ...args < ...Serializable|JSHandle > 要传给 pageFunction 的参数。
+    （比如你的代码里生成了一个变量，在页面中执行方法时需要用到，可以通过这个 args 传进去)
+ *  返回: < Promise< Serializable > > Promise对象，完成后是 pageFunction 的返回值 此 方法在
+    页面内执行 Array.from(document.querySelectorAll(selector))，
+    然后把匹配到的元素数组作为第一个参数传给 pageFunction。
+2. `page.$eval(selector, pageFunction[, ...args])` 
+  *   selector < string > 选择器 
+  * pageFunction <function> 在浏览器实例上下文中要执行的方法
+  * ...args <...Serializable|JSHandle> 要传给 pageFunction 的参数。
+    （比如你的代码里生成了一个变量，在页面中执行方法时需要用到，可以通过这个 args 传进去） 
+  * 返回: <Promise<Serializable>> Promise对象， 完成后是 pageFunction 的返回值
+  此方法在页面内执行 document.querySelector，然后把匹配到的元素作为第一个参数传给
+  pageFunction。
+  
+示例：
+
+```javascript
+// 所有 a 标签的href集合
+const links = await page.$$eval('a', els => Array.from(els).map(el => el.href));
+// 第一个a标签的href值
+const link = await page.$$eval('a', el => el.href);
+
+```
+webAPI中写法分别为
+```javascript
+const links = Array.from(document.querySelectorAll('a')).map(el=>el.getAttribute('href'));
+const link = document.querySelector('a').getAttribute('href');
+```
