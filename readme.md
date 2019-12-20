@@ -10,7 +10,7 @@
 
 实践  
 
-`test/xuexiqiangguo` 某个学习平台WEB端刷分脚本
+`test/xueipingtaiScript.js` 某个学习平台WEB端刷分脚本
 
 ---
 
