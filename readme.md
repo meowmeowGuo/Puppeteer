@@ -158,9 +158,9 @@ WebAPI中可通过 `documet.querySelector`,`documet.querySelectorAll`获取到do
   * pageFunction <function> 在浏览器实例上下文中要执行的方法
   * ...args <...Serializable|JSHandle> 要传给 pageFunction 的参数。
     （比如你的代码里生成了一个变量，在页面中执行方法时需要用到，可以通过这个 args 传进去） 
-  * 返回: <Promise<Serializable>> Promise对象， 完成后是 pageFunction 的返回值
-  此方法在页面内执行 document.querySelector，然后把匹配到的元素作为第一个参数传给
-  pageFunction。
+  * 返回: < Promise<Serializable > > Promise对象， 完成后是 pageFunction 的返回值
+    此方法在页面内执行 document.querySelector，然后把匹配到的元素作为第一个参数传给
+    pageFunction。
   
 示例：
 
