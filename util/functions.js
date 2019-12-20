@@ -13,7 +13,7 @@ async function autoScroll(page) {
           clearInterval(timer);
           resolve();
         }
-      }, Math.random() * 1000);
+      }, Math.random() * 10000);
     });
   });
 }

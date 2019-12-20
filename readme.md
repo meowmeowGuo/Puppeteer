@@ -120,6 +120,8 @@ await page.click('div.login-btn.login-password.sense_login_password.btn-green');
 启动时打开了gui，那就可以看到用户名和密码慢慢的一个一个字符输入，拉勾网登录后有图片验证码，可以结合
 2.2.2 设置页面等待，手动点击验证码验证成功后即可登陆成功
 
+---
+
 #### 2.2.4 切换浏览器tab页
 点击操作可能会打开一个新的tab，此时浏览器的 page 对象依然是前一个tab的，
 为了在新开的标签页做一些操作， 需要获取到新开的tab的 page 对象，需要用到 `browser.pages()`，
@@ -134,3 +136,5 @@ const pages = await browser.pages(); // 当前所有 page 对象集合
 * */
 const newPage = pages[2]; // 最后一个tab页即为新打开的tab页。
 ```
+
+---
