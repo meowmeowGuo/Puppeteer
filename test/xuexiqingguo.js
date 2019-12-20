@@ -166,15 +166,15 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
           }
           const row = parseInt(index / COLITEMCOUNT) + 1;
           const col = parseInt(index % COLITEMCOUNT) + 1;
-          console.log(`第 ${clc.green(videoCount + 1)} 个视频任务 start`);
+          console.log(`------第 ${clc.green(videoCount + 1)} 个视频任务 start------`);
           console.log(`video position: (${row}, ${col})`);
           console.log('发布时间：', clc.blue(dateList[index]));
           const viewTime = 3 + randomMin();
           await doTask(currentPages[3], videoSelector.videoSelector(row, col), 4, viewTime * 60 * 1000);
           console.log('观看时间：', viewTime, 'min');
-          console.log(`第 ${clc.green(videoCount + 1)} 个视频任务 end`);
+          console.log(`++++++第 ${clc.green(videoCount + 1)} 个视频任务 end++++++++`);
           videoCount++;
-          console.log(`已观看 ${clc.red(videoCount)} 个视频`);
+          console.log(`///////////////已观看 ${clc.red(videoCount)} 个视频`);
         }
         console.log(clc.magentaBright(`第 ${i} 个栏目结束`));
       }
