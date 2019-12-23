@@ -34,11 +34,19 @@ const newsTaskConfig = {
   needCount: 6,
 };
 
-const today = new Date();
-const todayFormat = `${today.getFullYear()}-${today.getMonth() + 1} - ${today.getDate()}`;
-const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+function getTaskDate() {
+  const today = new Date();
+  // const todayFormat = `${today.getFullYear()}-${today.getMonth() + 1} - ${today.getDate()}`;
+  let yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  if (today.getDay() === 1) {
+    yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
+  }
+  return `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
+}
 
 (async () => {
+  const taskDate = getTaskDate();
+  console.log('任务日期：', clc.red(taskDate));
   const browser = await puppeteer.launch({
     headless: false, // 是否以 无头模式 运行浏览器。默认是 true
     // devtools: true, // 是否为每个选项卡自动打开DevTools面板
@@ -99,7 +107,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
         el.innerText.replace(/ /g, '')),
     );
     newDates.filter((item, index) => {
-      if (item === yesterday) {
+      if (item === taskDate) {
         indexList.push(index);
       }
     });
@@ -154,7 +162,7 @@ const yesterday = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDat
           return el.innerText.replace(/ /g, '');
         }));
         const canViewNumber = dateList.filter((item, index) => {
-          if (item === yesterday) {
+          if (item === taskDate) {
             indexList.push(index);
             return item;
           }
