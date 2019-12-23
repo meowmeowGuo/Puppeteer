@@ -111,11 +111,8 @@ function getTaskDate() {
         indexList.push(index);
       }
     });
-    for (let index of indexList) {
-      if (newsCount === 6) {
-        // 看完6篇自动结束
-        break;
-      }
+
+    async function viewNew(index) {
       console.log(`--------第 ${clc.green(newsCount + 1)} 条新闻 index=${index + 1} start--------`);
       // 打开时评新闻详情页面 打开后pages=['','首页','时评页','时评详情']
       console.log(`new position:(${index})`);
@@ -125,7 +122,22 @@ function getTaskDate() {
       await doTask(shiPingPage, newsSelector.news(index + 1), 3, viewTime * 60 * 1000);
       console.log('观看时间：', viewTime, 'min');
       console.log(`++++++++第 ${clc.green(newsCount + 1)} 条新闻 end++++++++++`);
+    }
+
+    for (let index of indexList) {
+      if (newsCount === 6) {
+        // 看完6篇自动结束
+        break;
+      }
+      await viewNew(index);
       newsCount++;
+    }
+    if (newsCount < 6) {
+      const firstIndex = indexList[0];
+      for (let i = 1; i <= 6 - newsCount; i++) {
+        await viewNew(firstIndex - i);
+        newsCount++;
+      }
     }
     await shiPingPage.close();
     console.log(clc.yellow(`====结束 ${newsTaskConfig.task} 任务====`));
