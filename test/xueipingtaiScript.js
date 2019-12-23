@@ -136,7 +136,8 @@ function getTaskDate() {
     if (newsCount < 6) {
       console.log(`上一个工作日的新闻不满6条，需要往前多看${6 - newsCount}条`);
       const firstIndex = indexList[0];
-      for (let i = 1; i <= 6 - newsCount; i++) {
+      const restCount = 6 - newsCount;
+      for (let i = 1; i <= restCount; i++) {
         await viewNew(firstIndex - i);
         newsCount++;
       }
