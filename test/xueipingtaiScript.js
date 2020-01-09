@@ -3,6 +3,7 @@
 * new：新增登录操作
 * */
 const puppeteer = require('puppeteer');
+const moment = require('moment');
 const clc = require('cli-color');
 const {autoScroll} = require('../util/functions');
 
@@ -41,7 +42,7 @@ function getTaskDate() {
   if (today.getDay() === 1) {
     yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
   }
-  return `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
+  return moment(yesterday).format('YYYY-MM-DD');
 }
 
 (async () => {
@@ -111,6 +112,8 @@ function getTaskDate() {
         indexList.push(index);
       }
     });
+
+    console.log(`===========当日共有 indexList = ${clc.red(indexList.length)} 条新闻`);
 
     async function viewNew(index) {
       console.log(`--------第 ${clc.green(newsCount + 1)} 条新闻 index=${index + 1} start--------`);
