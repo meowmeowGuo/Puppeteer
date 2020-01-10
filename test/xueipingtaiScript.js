@@ -46,7 +46,8 @@ function getTaskDate() {
 }
 
 (async () => {
-  const taskDate = getTaskDate();
+  // const taskDate =  getTaskDate();
+  const taskDate = moment(new Date()).format('YYYY-MM-DD');
   console.log('任务日期：', clc.red(taskDate));
   const browser = await puppeteer.launch({
     headless: false, // 是否以 无头模式 运行浏览器。默认是 true
