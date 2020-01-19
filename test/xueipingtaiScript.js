@@ -127,7 +127,7 @@ function getTaskDate(day = 1) {
 
       console.log(`===========当日共有 indexList = ${clc.red(indexList.length)} 条新闻`);
       if (!indexList.length) {
-        console.log(clc.red(`.........${newDates} 尚未发布新闻，向前推一天............`));
+        console.log(clc.red(`.........${taskDate} 尚未发布新闻，向前推一天............`));
         day += 1;
         taskDate = getTaskDate(day);
         await readNews();
