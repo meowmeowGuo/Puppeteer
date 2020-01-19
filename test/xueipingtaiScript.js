@@ -37,11 +37,7 @@ const newsTaskConfig = {
 
 function getTaskDate(day = 1) {
   const today = new Date();
-  // const todayFormat = `${today.getFullYear()}-${today.getMonth() + 1} - ${today.getDate()}`;
   let yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - day);
-  if (today.getDay() === 1) {
-    yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
-  }
   return moment(yesterday).format('YYYY-MM-DD');
 }
 
