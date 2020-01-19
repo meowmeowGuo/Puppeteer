@@ -35,10 +35,10 @@ const newsTaskConfig = {
   needCount: 6,
 };
 
-function getTaskDate() {
+function getTaskDate(day = 1) {
   const today = new Date();
   // const todayFormat = `${today.getFullYear()}-${today.getMonth() + 1} - ${today.getDate()}`;
-  let yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  let yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - day);
   if (today.getDay() === 1) {
     yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3);
   }
@@ -46,8 +46,9 @@ function getTaskDate() {
 }
 
 (async () => {
-  // const taskDate =  getTaskDate();
-  const taskDate = moment(new Date()).format('YYYY-MM-DD');
+  let taskDate = getTaskDate();
+  let day = 1;
+  // let taskDate = moment(new Date()).format('YYYY-MM-DD');
   console.log('任务日期：', clc.red(taskDate));
   const browser = await puppeteer.launch({
     headless: false, // 是否以 无头模式 运行浏览器。默认是 true
@@ -102,50 +103,63 @@ function getTaskDate() {
     await page.waitFor(waitTime);
     currentPages = await browser.pages();
     const shiPingPage = currentPages[2];
-    const indexList = [];
-    // 筛选日期为昨天的时评的index
-    const newDates = await shiPingPage.$$eval(newsSelector.newsDate, els =>
-      Array.from(els).map(el =>
-        el.innerText.replace(/ /g, '')),
-    );
-    newDates.filter((item, index) => {
-      if (item === taskDate) {
-        indexList.push(index);
+
+    async function readNews() {
+      const indexList = [];
+      // 筛选日期为昨天的时评的index
+      const newDates = await shiPingPage.$$eval(newsSelector.newsDate, els =>
+        Array.from(els).map(el =>
+          el.innerText.replace(/ /g, '')),
+      );
+      newDates.filter((item, index) => {
+        if (item === taskDate) {
+          indexList.push(index);
+        }
+      });
+
+      async function viewNew(index) {
+        console.log(`--------第 ${clc.green(newsCount + 1)} 条新闻 index=${index + 1} start--------`);
+        // 打开时评新闻详情页面 打开后pages=['','首页','时评页','时评详情']
+        console.log(`new position:(${index})`);
+        console.log('发布时间：', clc.blue(newDates[index]));
+        const viewTime = 2 + randomMin();
+        // 选择器下标从 1 开始，数组下标需要 +1
+        await doTask(shiPingPage, newsSelector.news(index + 1), 3, viewTime * 60 * 1000);
+        console.log('观看时间：', viewTime, 'min');
+        console.log(`++++++++第 ${clc.green(newsCount + 1)} 条新闻 end++++++++++`);
       }
-    });
 
-    console.log(`===========当日共有 indexList = ${clc.red(indexList.length)} 条新闻`);
-
-    async function viewNew(index) {
-      console.log(`--------第 ${clc.green(newsCount + 1)} 条新闻 index=${index + 1} start--------`);
-      // 打开时评新闻详情页面 打开后pages=['','首页','时评页','时评详情']
-      console.log(`new position:(${index})`);
-      console.log('发布时间：', clc.blue(newDates[index]));
-      const viewTime = 2 + randomMin();
-      // 选择器下标从 1 开始，数组下标需要 +1
-      await doTask(shiPingPage, newsSelector.news(index + 1), 3, viewTime * 60 * 1000);
-      console.log('观看时间：', viewTime, 'min');
-      console.log(`++++++++第 ${clc.green(newsCount + 1)} 条新闻 end++++++++++`);
-    }
-
-    for (let index of indexList) {
-      if (newsCount === 6) {
-        // 看完6篇自动结束
-        break;
+      console.log(`===========当日共有 indexList = ${clc.red(indexList.length)} 条新闻`);
+      if (!indexList.length) {
+        console.log(clc.red(`.........${newDates} 尚未发布新闻，向前推一天............`));
+        day += 1;
+        taskDate = getTaskDate(day);
+        await readNews();
+        return;
       }
-      await viewNew(index);
-      newsCount++;
-    }
-    console.log(`////////////////////已经看了${newsCount}条新闻`);
-    const restCount = 6 - newsCount;
-    if (newsCount < 6) {
-      console.log(`上一个工作日的新闻不满6条，需要往前多看${restCount}条`);
-      const firstIndex = indexList[0];
-      for (let i = 1; i <= restCount; i++) {
-        await viewNew(firstIndex - i);
+      for (let index of indexList) {
+        if (newsCount === 6) {
+          // 看完6篇自动结束
+          break;
+        }
+        await viewNew(index);
         newsCount++;
       }
+      console.log(`////////////////////已经看了${newsCount}条新闻`);
+      const restCount = 6 - newsCount;
+      if (newsCount < 6) {
+        console.log(`上一个工作日的新闻不满6条，需要往前多看${restCount}条`);
+        const firstIndex = indexList[0];
+        for (let i = 1; i <= restCount; i++) {
+          await viewNew(firstIndex - i);
+          newsCount++;
+        }
+      }
     }
+
+
+    await readNews();
+
     await shiPingPage.close();
     console.log(clc.yellow(`====结束 ${newsTaskConfig.task} 任务====`));
   }
